@@ -8,7 +8,7 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { cn } from '@/utils/cn';
 
-type Props = Tables<'auctions'>;
+type Props = Tables<'auctions'> & { showButton?: boolean; to?: string };
 
 const formatDate = (date: string) => {
     return new Date(date).toLocaleString('en-GB', {
@@ -27,9 +27,9 @@ const priceFormatter = new Intl.NumberFormat('en-GB', {
 
 export const AuctionCard = (props: Props) => {
     const router = useRouter();
-    const { id, title, description, imgUrl, price, active, endsAt } = props;
+    const { id, title, description, imgUrl, price, active, endsAt, showButton = true, to } = props;
 
-    const handleClick = () => router.push(`/auction/${id}`);
+    const handleClick = () => router.push(to ? to : `/auction/${id}`);
 
     return (
         <Card key={id} onClick={handleClick} className="cursor-pointer">
@@ -54,9 +54,11 @@ export const AuctionCard = (props: Props) => {
                         <p className="text-sm text-muted-foreground">Current price</p>
                         <p className="text-lg font-semibold">{priceFormatter.format(price)}</p>
                     </div>
-                    <Button variant="default" size="sm" asChild>
-                        <Link href={`/auction/${id}`}>Go to auction</Link>
-                    </Button>
+                    {showButton && (
+                        <Button variant="default" size="sm" asChild>
+                            <Link href={`/auction/${id}`}>Go to auction</Link>
+                        </Button>
+                    )}
                 </div>
                 <div>
                     <Badge variant="outline">
