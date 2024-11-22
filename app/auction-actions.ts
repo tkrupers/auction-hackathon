@@ -30,10 +30,12 @@ export const getAuctionById = async (id: number) => {
     ownerId,
     winnerId,
     active,
+    endsAt,
 
     bids (
     id,
-    price
+    price,
+    userId
     )
 `,
         )

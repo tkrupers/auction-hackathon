@@ -5,7 +5,9 @@ import { AuctionCard } from '@/components/Auctions/AuctionCard';
 export default async function Index() {
     const auctions = await getAuctions();
     const active = auctions.filter((auction) => new Date(auction.endsAt) > new Date());
-    const ended = auctions.filter((auction) => new Date(auction.endsAt) <= new Date());
+    const ended = auctions
+        .filter((auction) => new Date(auction.endsAt) <= new Date())
+        .sort((a, b) => new Date(b.endsAt).getTime() - new Date(a.endsAt).getTime());
 
     const data = [
         { title: 'Active auctions', items: active },

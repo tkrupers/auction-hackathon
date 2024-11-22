@@ -1,6 +1,9 @@
+import { getUser } from '@/app/actions';
 import { getAuctionById } from '@/app/auction-actions';
+import CountDown from '@/components/Auctions/CountDown';
 import { PlaceBid } from '@/components/Auctions/PlaceBid';
 import { Badge } from '@/components/ui/badge';
+
 import {
     Table,
     TableBody,
@@ -12,16 +15,21 @@ import {
 } from '@/components/ui/table';
 import Image from 'next/image';
 
+const priceFormatter = new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'EUR',
+});
+
 export default async function AuctionDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
+    const user = await getUser();
+    const data = await getAuctionById(parseInt(id));
 
-    const data = await getAuctionById(Number(id));
-
-    if (!data || data.length === 0) {
+    if (!data) {
         return <div>Auction not found</div>;
     }
 
-    const { title, description, imgUrl, price, active, winnerId } = data[0];
+    const { title, description, imgUrl, price, active, winnerId, bids, endsAt } = data;
 
     return (
         <div className="flex flex-col gap-5">
@@ -31,6 +39,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
                     {active ? 'Active' : 'Ended'}
                 </Badge>
             </div>
+            <CountDown endsAt={endsAt} />
             <div className="w-full gap-10 flex justify-between">
                 <Image src={imgUrl} alt={title} width={450} height={450} className="flex-grow-0 w-1/2" />
                 <div className="flex flex-grow-2 w-full flex-col ">
@@ -46,7 +55,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
                         </p>
                         <p className="text-lg font-semibold">{price}€</p>
                     </div>
-                    {active && <PlaceBid />}
+                    {active && <PlaceBid auctionId={parseInt(id)} userId={user?.id} />}
                 </div>
             </div>
             <Table>
@@ -59,28 +68,18 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>
-                            <strong>test@tets.gr</strong>
-                        </TableCell>
-                        <TableCell className="text-right">200€</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>test@tets.gr</TableCell>
-                        <TableCell className="text-right">200€</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>test@tets.gr</TableCell>
-                        <TableCell className="text-right">200€</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>test@tets.gr</TableCell>
-                        <TableCell className="text-right">200€</TableCell>
-                    </TableRow>
+                    {bids.map((bid: any) => (
+                        <TableRow>
+                            <TableCell>{bid.id}</TableCell>
+                            <TableCell>{bid.userId}</TableCell>
+                            <TableCell className="text-right">{priceFormatter.format(bid.price)}</TableCell>
+                        </TableRow>
+                    ))}
+                    {bids.length === 0 && (
+                        <TableRow>
+                            <TableCell colSpan={3}>No biddings yet</TableCell>
+                        </TableRow>
+                    )}
                 </TableBody>
             </Table>
         </div>
