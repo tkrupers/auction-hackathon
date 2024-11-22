@@ -1,3 +1,4 @@
+"use client"
 import { Badge } from './ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 
@@ -22,8 +23,15 @@ const formatDate = (date: Date) => {
 };
 
 export const CardsContainer = ({ cards }: { cards: CardProps[] }) => {
+
+    const handleClick = () => {
+        console.log("Item clicked!")
+    };
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" onClick={() => {
+            handleClick()
+        }}>
             {cards.map((card) => (
                 <Card key={card.id}>
                     <CardHeader>
