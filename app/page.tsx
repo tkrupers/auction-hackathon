@@ -1,5 +1,5 @@
 import SimpleGrid from '@/components/SimpleGrid';
-import { getAuctionById, getAuctions } from './auction-actions';
+import { getAuctions } from './auction-actions';
 import { AuctionCard } from '@/components/Auctions/AuctionCard';
 
 export default async function Index() {
