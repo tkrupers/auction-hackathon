@@ -1,4 +1,4 @@
-import { CardsContainer } from '@/components/CardsContainer';
+import { CardsContainer } from '@/components/Auctions/CardsContainer';
 
 export default async function Index() {
     const auctions = [
