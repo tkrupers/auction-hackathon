@@ -4,6 +4,9 @@ import { Tables } from '@/types';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
+import Link from 'next/link';
+import { cn } from '@/utils/cn';
 
 type Props = Tables<'auctions'>;
 
@@ -17,6 +20,11 @@ const formatDate = (date: string) => {
     });
 };
 
+const priceFormatter = new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'EUR',
+});
+
 export const AuctionCard = (props: Props) => {
     const router = useRouter();
     const { id, title, description, imgUrl, price, active, endsAt } = props;
@@ -26,25 +34,34 @@ export const AuctionCard = (props: Props) => {
     return (
         <Card key={id} onClick={handleClick} className="cursor-pointer">
             <CardHeader>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                     <CardTitle>{title}</CardTitle>
-                    <Badge className="text-sm" variant={active ? 'active' : 'destructive'}>
-                        {active ? 'Active' : 'Ended'}
-                    </Badge>
+                    <span
+                        className={cn('flex size-2 rounded-full ', {
+                            'bg-green-500': active,
+                            'bg-red-500': !active,
+                        })}
+                    />
                 </div>
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardContent>
                 <img src={imgUrl} alt={title} className="w-full h-48 object-cover rounded-lg" />
             </CardContent>
-            <CardFooter className="flex flex-col  md:flex-row gap-6 justify-start items-start">
-                <div className="flex-1">
-                    <p className="text-sm text-muted-foreground">Current price</p>
-                    <p className="text-lg font-semibold">{price} €</p>
+            <CardFooter className="flex flex-col items-end">
+                <div className="flex flex-col md:flex-row gap-6 justify-start items-start mb-3">
+                    <div>
+                        <p className="text-sm text-muted-foreground">Current price</p>
+                        <p className="text-lg font-semibold">{priceFormatter.format(price)}</p>
+                    </div>
+                    <Button variant="default" size="sm" asChild>
+                        <Link href={`/auction/${id}`}>Go to auction</Link>
+                    </Button>
                 </div>
-                <div className="flex-1">
-                    <p className="text-sm text-muted-foreground">Ends at</p>
-                    <p className="text-lg font-semibold">{formatDate(endsAt)}</p>
+                <div>
+                    <Badge variant="outline">
+                        {active ? 'Ends at' : 'Ended at'} {formatDate(endsAt)}
+                    </Badge>
                 </div>
             </CardFooter>
         </Card>
