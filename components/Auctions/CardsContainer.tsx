@@ -1,5 +1,3 @@
-import { Badge } from '../ui/badge';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { AuctionCard } from './Card';
 
 export type CardProps = {
@@ -16,7 +14,7 @@ export const CardsContainer = ({ cards }: { cards: CardProps[] }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cards.map((card) => (
-                <AuctionCard card={card} />
+                <AuctionCard card={card} key={card.id}/>
             ))}
         </div>
     );

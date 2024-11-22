@@ -1,3 +1,5 @@
+"use client"
+import { useRouter } from 'next/navigation';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { CardProps } from './CardsContainer';
@@ -13,8 +15,16 @@ const formatDate = (date: Date) => {
 };
 
 export const AuctionCard = ({ card }: { card: CardProps }) => {
+
+    const router = useRouter()
+
+    const handleClick = () => {
+        console.log("Item clicked!")
+        router.push('/auction/'+card.id)
+    };
+
     return (
-        <Card key={card.id}>
+        <Card key={card.id} className='cursor-pointer' onClick={() => handleClick()}>
             <CardHeader>
                 <div className="flex justify-between">
                     <CardTitle>{card.title}</CardTitle>
