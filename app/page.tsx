@@ -1,6 +1,6 @@
 import SimpleGrid from '@/components/SimpleGrid';
 import { getAuctionById, getAuctions } from './auction-actions';
-import { AuctionCard } from '@/components/AuctionCard';
+import { AuctionCard } from '@/components/Auctions/AuctionCard';
 
 export default async function Index() {
     const auctions = await getAuctions();

@@ -1,6 +1,9 @@
+'use client';
+
 import { Tables } from '@/types';
-import { Badge } from './ui/badge';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { useRouter } from 'next/navigation';
 
 type Props = Tables<'auctions'>;
 
@@ -15,10 +18,13 @@ const formatDate = (date: string) => {
 };
 
 export const AuctionCard = (props: Props) => {
+    const router = useRouter();
     const { id, title, description, imgUrl, price, active, endsAt } = props;
 
+    const handleClick = () => router.push(`/auction/${id}`);
+
     return (
-        <Card key={id}>
+        <Card key={id} onClick={handleClick} className="cursor-pointer">
             <CardHeader>
                 <div className="flex justify-between">
                     <CardTitle>{title}</CardTitle>
