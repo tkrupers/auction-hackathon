@@ -1,4 +1,10 @@
+import { getAuctionById } from "./auction-actions";
+
 export default async function Index() {
+  const auctions = await getAuctionById(1);
+
+  console.log(auctions);
+
   return (
     <>
       {/* <Hero /> */}
